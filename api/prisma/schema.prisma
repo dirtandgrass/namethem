@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model name {
+  name_id                               Int           @id(map: "name_pk") @default(autoincrement())
+  name                                  String        @db.VarChar
+  male                                  Boolean       @default(false)
+  female                                Boolean       @default(false)
+  similar_similar_name_idToname         similar[]     @relation("similar_name_idToname")
+  similar_similar_similar_name_idToname similar[]     @relation("similar_similar_name_idToname")
+  source_name                           source_name[]
+}
+
+model source {
+  source_id   Int           @id(map: "source_pk") @default(autoincrement())
+  name        String
+  url         String?       @db.VarChar
+  description String?       @db.VarChar
+  source_name source_name[]
+}
+
+model source_name {
+  source_name_id Int    @id(map: "source_name_pk") @default(autoincrement())
+  name_id        Int
+  source_id      Int
+  name           name   @relation(fields: [name_id], references: [name_id], onDelete: NoAction, onUpdate: NoAction, map: "source_name_fk")
+  source         source @relation(fields: [source_id], references: [source_id], onDelete: NoAction, onUpdate: NoAction, map: "source_name_fk_1")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model similar {
+  similar_id                         Int  @id(map: "name_name_pk") @default(autoincrement())
+  name_id                            Int
+  similar_name_id                    Int
+  name_similar_name_idToname         name @relation("similar_name_idToname", fields: [name_id], references: [name_id], onDelete: NoAction, onUpdate: NoAction, map: "name_name_fk")
+  name_similar_similar_name_idToname name @relation("similar_similar_name_idToname", fields: [similar_name_id], references: [name_id], onDelete: NoAction, onUpdate: NoAction, map: "name_name_fk_1")
+}
