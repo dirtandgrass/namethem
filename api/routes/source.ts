@@ -11,4 +11,10 @@ router.get("/", async function (req: Request, res: Response, next: NextFunction)
   res.json(result);
 });
 
+router.get("/name/:id(\\d+)/", async function (req: Request, res: Response, next: NextFunction) {
+
+  const result = await Source.getSourcesForNameId(parseInt(req.params.id));
+  res.json(result);
+});
+
 module.exports = router;

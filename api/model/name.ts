@@ -1,5 +1,4 @@
 import { Prisma, PrismaClient } from '@prisma/client'
-import { get } from 'http';
 const prisma = new PrismaClient()
 
 
@@ -67,6 +66,8 @@ export default class Name {
     }
 
     const query = `select n.name_id, n.name, n.male, n.female from source_name sn join name n on n.name_id=sn.name_id ${source_clause} ${sex_clause} order by random() limit ${count}`;
+
+    //console.log(query);
     const data: Record<string, unknown> = await prisma.$queryRawUnsafe(query);
 
     const resultObj = { count, source_ids, sex: Sex[sex], data }

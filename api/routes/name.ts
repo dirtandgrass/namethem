@@ -1,4 +1,4 @@
-import { Express, Request, Response, NextFunction, Router } from 'express';
+import { Request, Response, NextFunction, Router } from 'express';
 import Name, { Sex, NameParams } from '../model/name';
 const router = Router();
 
@@ -17,6 +17,12 @@ router.get("/", async function (req: Request, res: Response, next: NextFunction)
   }
 
   if (req.query?.source_ids) { // querystring specified source_ids
+
+    // allow comma-separated list of source_ids
+    if (typeof (req.query.source_ids) === "string" && req.query.source_ids.indexOf(',') > -1) {
+      req.query.source_ids = req.query.source_ids.split(',');
+    }
+
     if (Array.isArray(req.query.source_ids)) {
       queryParams.source_ids = req.query.source_ids.map((id) => parseInt(id.toString()) || 1);
     } else {

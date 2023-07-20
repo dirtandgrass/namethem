@@ -15,5 +15,12 @@ export default class Source {
     return resultObj;
   }
 
+  static async getSourcesForNameId(name_id: number): Promise<{ count: number, data: any }> { //todo specify 'data' type
+
+    const sources = await prisma.source_name.findMany(
+      { where: { name_id: name_id }, include: { source: true } });
+    const resultObj = { count: sources.length, data: sources }
+    return resultObj;
+  }
 
 }
