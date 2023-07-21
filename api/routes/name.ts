@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import Name, { Sex, NameParams } from '../model/name';
 const router = Router();
 
 /* gets a list of random names */
-router.get("/", async function (req: Request, res: Response, next: NextFunction) {
+router.get("/", async function (req: Request, res: Response) {
 
   const queryParams: NameParams = {};
 
@@ -13,7 +13,7 @@ router.get("/", async function (req: Request, res: Response, next: NextFunction)
 
   if (req.query?.sex) { // querystring specified count
     const qs = req.query.sex.toString();
-    queryParams.sex = (<any>Sex)[qs] || Sex.any;
+    queryParams.sex = qs as Sex || undefined;
   }
 
   if (req.query?.source_ids) { // querystring specified source_ids
@@ -35,13 +35,13 @@ router.get("/", async function (req: Request, res: Response, next: NextFunction)
   res.json(result);
 });
 
-router.get("/similar/:id(\\d+)/", async function (req: Request, res: Response, next: NextFunction) {
+router.get("/similar/:id(\\d+)/", async function (req: Request, res: Response) {
 
   const result = await Name.getSimilarNamesForId(parseInt(req.params.id));
   res.json(result);
 });
 
-router.get("/similar/:name", async function (req: Request, res: Response, next: NextFunction) {
+router.get("/similar/:name", async function (req: Request, res: Response) {
 
   const result = await Name.getSimilarNames(req.params.name);
   res.json(result);
@@ -49,4 +49,4 @@ router.get("/similar/:name", async function (req: Request, res: Response, next: 
 
 
 
-module.exports = router;
+export default router;

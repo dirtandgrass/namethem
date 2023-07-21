@@ -1,13 +1,10 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 
-const nameRecord: Prisma.similarInclude = {
-
-}
 
 export enum Sex {
-  male = "male", female = "female", unisex = "unisex", any = "any"
+  male = "male", female = "female", unisex = "unisex", all = "all"
 }
 
 export type NameParams = { count?: number, source_ids?: number | Array<number>, sex?: Sex }
@@ -16,7 +13,7 @@ export type NameParams = { count?: number, source_ids?: number | Array<number>, 
 
 export default class Name {
 
-  static async getSimilarNamesForId(name_id: number): Promise<{ count: number, data: any }> {
+  static async getSimilarNamesForId(name_id: number): Promise<{ count: number, data: string[] }> {
 
     const similar = await prisma.similar.findMany({
       where: { name_id: name_id }, select: { similar_name_id: true, name_similar_similar_name_idToname: { select: { name: true } } }
@@ -27,17 +24,17 @@ export default class Name {
     const resultObj = { count: similar.length, data: data }
     return resultObj;
   }
-  static async getSimilarNames(name: string): Promise<{ count: number, data: any }> {
+  static async getSimilarNames(name: string): Promise<{ count: number, data: string[] }> {
 
     const name_id = await prisma.name.findFirst({ where: { name: { equals: name, mode: 'insensitive' } }, select: { name_id: true } });
 
-    console.log(name_id);
+    //console.log(name_id);
     if (name_id === null) return { count: 0, data: [] };
 
     return this.getSimilarNamesForId(name_id.name_id);
 
   }
-  static async getRandomNames({ count = 5, source_ids = -1, sex = Sex.any }: NameParams)
+  static async getRandomNames({ count = 5, source_ids = -1, sex = Sex.all }: NameParams)
     : Promise<{ count?: number, source_id?: number | Array<number>, sex?: string, data: Record<string, unknown> }> {
     count = Math.round(count);
     if (count < 1) { count = 1 } else if (count > 20) { count = 20 }
@@ -55,7 +52,7 @@ export default class Name {
     let sex_clause = "";
 
 
-    if (sex !== Sex.any) {
+    if (sex !== Sex.all) {
       sex_clause = (source_clause.length > 0 ? "and " : "where ");
       if (sex == Sex.unisex) {
         sex_clause += 'n.male = true AND n.female = true ' // unisex
