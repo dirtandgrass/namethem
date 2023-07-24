@@ -1,10 +1,12 @@
 import { Request, Response, Router } from 'express';
 import Name, { Sex, NameParams } from '../model/name';
+import { AuthUser } from '../middleware/headerauth';
 const router = Router();
 
 /* gets a list of random names */
 router.get("/", async function (req: Request, res: Response) {
 
+  console.log("AU:", AuthUser);
   const queryParams: NameParams = {};
 
   if (req.query?.count) { // querystring specified count

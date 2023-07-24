@@ -1,13 +1,13 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 
-import createHttpError from 'http-errors';
 
 
 import path from 'path';
 
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import headerauth from './middleware/headerauth';
 
 import nameRouter from './routes/name';
 import sourceRouter from './routes/source';
@@ -31,6 +31,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(headerauth);
+
+
 
 
 app.use('/name', nameRouter);
@@ -45,8 +48,8 @@ app.use('/user', userRouter);
 // });
 
 // catch 404 and forward to error handler
-app.use(function (req: Request, res: Response, next: NextFunction) {
-  next(createHttpError(404));
+app.use(function (req: Request, res: Response) {
+  res.json({ code: 404, message: "Not found", success: false });
 });
 // error handler
 // app.use(function (err: HttpError, req: Request, res: Response, next: NextFunction): void {
