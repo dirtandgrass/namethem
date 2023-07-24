@@ -1,7 +1,11 @@
 import { Request, Response, Router } from 'express';
 import Source from '../model/source';
-
+import cors from 'cors';
 const router = Router();
+
+if (process.env.NODE_ENV === "development") {
+  router.use(cors());
+}
 
 /* get the list of sources */
 router.get("/", async function (req: Request, res: Response) {

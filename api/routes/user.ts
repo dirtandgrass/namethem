@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import User from '../model/user';
+import cors from 'cors';
 
 const router = Router();
+
+if (process.env.NODE_ENV === "development") {
+  router.use(cors());
+}
 
 /* get the list of users */
 router.get("/", async function (req: Request, res: Response) {

@@ -13,10 +13,14 @@ import nameRouter from './routes/name';
 import sourceRouter from './routes/source';
 import userRouter from './routes/user';
 
+
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
+
+
+
 
 let auth_salt: number = 10;
 if (process.env.AUTH_SALT) {

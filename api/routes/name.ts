@@ -1,7 +1,12 @@
 import { Request, Response, Router } from 'express';
 import Name, { Sex, NameParams } from '../model/name';
 import { AuthUser } from '../middleware/headerauth';
+import cors from 'cors';
 const router = Router();
+if (process.env.NODE_ENV === "development") {
+  router.use(cors());
+}
+
 
 /* gets a list of random names */
 router.get("/", async function (req: Request, res: Response) {
