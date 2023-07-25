@@ -38,17 +38,17 @@ router.post("/login", async function (req: Request, res: Response, next: NextFun
 
 //login with email and password
 router.post("/login", async function (req: Request, res: Response, next: NextFunction) {
-  if (!req.body.email || !req.body.password) { next(); return; }
+  if (!req.body.login_email || !req.body.login_password) { next(); return; }
 
   let create_session = false;
   if (req.body.create_session) {
     create_session = true;
   }
-  const result = await User.EmailPasswordLogin(req.body.email, req.body.password);
+  const result = await User.EmailPasswordLogin(req.body.login_email, req.body.login_password);
 
 
   if (result && result.user_id) {
-
+    //console.log(result)
     if (create_session) {
 
       const session = await User.CreateSession(result.user_id);

@@ -12,6 +12,7 @@ import headerauth from './middleware/headerauth';
 import nameRouter from './routes/name';
 import sourceRouter from './routes/source';
 import userRouter from './routes/user';
+import cors from 'cors';
 
 
 dotenv.config();
@@ -19,6 +20,9 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT;
 
+if (process.env.NODE_ENV === "development") {
+  app.use(cors());
+}
 
 
 

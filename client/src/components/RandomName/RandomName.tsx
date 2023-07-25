@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
 
-interface Item {
-  id: number;
+type Name = {
+  name_id: number;
   name: string;
-}
+  male: boolean;
+  female: boolean;
+};
+
+type NameResult = {
+  count: number;
+  data: Name[];
+  length: number;
+};
 
 const RandomName: React.FC = () => {
-  const [data, setData] = useState<Item[]>([]);
+  const [data, setData] = useState<NameResult>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<{ message: string; name: string } | null>(
     null
@@ -16,11 +24,13 @@ const RandomName: React.FC = () => {
     // Function to fetch data from the API
     const fetchData = async () => {
       try {
-        const response = await fetch("https://api.example.com/data");
+        const response = await fetch("http://localhost:3000/name?count=2");
+
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data: Item[] = await response.json();
+        const data: NameResult = await response.json();
+        console.log(data);
         setData(data); // Set the fetched data in the state
       } catch (error: unknown) {
         const tError = (error as Error) || {
@@ -53,10 +63,10 @@ const RandomName: React.FC = () => {
   // Render the fetched data
   return (
     <div>
-      <h1>Fetched Data:</h1>
+      <h1>Here are {data?.count} names for you:</h1>
       <ul>
-        {data.map((item) => (
-          <li key={item.id}>{item.name}</li>
+        {data?.data.map((item) => (
+          <li key={item.name_id}>{item.name}</li>
         ))}
       </ul>
     </div>

@@ -3,6 +3,8 @@ import Name, { Sex, NameParams } from '../model/name';
 import { AuthUser } from '../middleware/headerauth';
 import cors from 'cors';
 const router = Router();
+
+
 if (process.env.NODE_ENV === "development") {
   router.use(cors());
 }
@@ -11,7 +13,7 @@ if (process.env.NODE_ENV === "development") {
 /* gets a list of random names */
 router.get("/", async function (req: Request, res: Response) {
 
-  console.log("AU:", AuthUser);
+  //console.log("AU:", AuthUser);
   const queryParams: NameParams = {};
 
   if (req.query?.count) { // querystring specified count

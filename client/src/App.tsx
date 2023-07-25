@@ -1,22 +1,19 @@
-import { createContext, useContext } from "react";
+import { useState } from "react";
 import "./App.css";
 import RandomName from "./components/RandomName/RandomName";
 import Menu from "./components/Menu/Menu";
 
-import { LoginStatus, User } from "./components/Login/types";
-import { log } from "console";
-
-const loginStatus = new LoginStatus();
-
-export const AuthContext = createContext(loginStatus);
+import Login from "./components/Login/Login";
+import { User } from "./types/User";
 
 function App() {
+  const [user] = useState<User>(new User(-1, "", ""));
+
   return (
     <>
       <header className="App-header">
-        <AuthContext.Provider value={loginStatus}>
-          <Menu />
-        </AuthContext.Provider>
+        <Menu />
+        <Login user={user} />
       </header>
       <main>
         <RandomName />
