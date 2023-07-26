@@ -1,10 +1,30 @@
 import localFetch, { HttpMethod } from "../../utility/LocalFetch";
 import { User } from "../../types/User";
-import { useState } from "react";
 import "./Login.css";
+import useStorage from "../../hooks/useStorage";
+import { useEffect } from "react";
 
-function Login({ user }: { user: User }) {
-  const [userObj, setUser] = useState(user);
+function Login({ user }: { user: User | null }) {
+  const [userObj, setUser] = useStorage<User>("user", null, "local"); // store logged in user, drilled down from App.tsx
+
+  useEffect(() => {
+    if (!userObj) {
+      logOut();
+      return;
+    }
+    // storage only stores data members, recreate User object if needed
+    if (!userObj.isLoggedIn) {
+      setUser(
+        new User(
+          userObj.user_id,
+          userObj.username,
+          userObj.email,
+          userObj.session_id,
+          userObj.session
+        )
+      );
+    }
+  });
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -14,24 +34,42 @@ function Login({ user }: { user: User }) {
       password: string;
     };
 
-    const result = (await localFetch("user/login/", HttpMethod.POST, data)) as {
+    const result = (await localFetch({
+      path: "user/login/",
+      method: HttpMethod.POST,
+      data,
+    })) as {
       message: string;
       success: boolean;
       user?: User;
+      session?: {
+        message: string;
+        success: boolean;
+        session_id?: number;
+        session?: string;
+      };
     };
 
-    if (result.success && result.user) {
+    if (result.success && result.user && result.session?.success) {
       setUser(
-        new User(result.user.user_id, result.user.username, result.user.email)
+        new User(
+          result.user.user_id,
+          result.user.username,
+          result.user.email,
+          result.session.session_id,
+          result.session.session
+        )
       );
+    } else {
+      logOut();
     }
   }
 
   function logOut() {
-    setUser(new User(-1, "", ""));
+    setUser(null);
   }
 
-  if (userObj.isLoggedIn()) {
+  if (userObj?.isLoggedIn && userObj?.isLoggedIn()) {
     return <button onClick={logOut}>Log Out</button>;
   } else {
     return (

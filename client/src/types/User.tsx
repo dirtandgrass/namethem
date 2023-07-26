@@ -2,6 +2,8 @@ export class User {
   user_id = -1;
   username = "";
   email = "";
+  session_id?: number;
+  session?: string;
 
   setUser(user: User) {
     this.user_id = user.user_id;
@@ -20,9 +22,17 @@ export class User {
     this.email = "";
   }
 
-  constructor(user_id: number, username: string, email: string) {
+  constructor(
+    user_id: number,
+    username: string,
+    email: string,
+    session_id: number | undefined = undefined,
+    session: string | undefined = undefined
+  ) {
     this.user_id = user_id;
     this.username = username;
     this.email = email;
+    this.session_id = session_id;
+    this.session = session;
   }
 }

@@ -30,7 +30,7 @@ const RandomName: React.FC = () => {
           throw new Error("Network response was not ok");
         }
         const data: NameResult = await response.json();
-        console.log(data);
+        //console.log(data);
         setData(data); // Set the fetched data in the state
       } catch (error: unknown) {
         const tError = (error as Error) || {

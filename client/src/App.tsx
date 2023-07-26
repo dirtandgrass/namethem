@@ -5,9 +5,10 @@ import Menu from "./components/Menu/Menu";
 
 import Login from "./components/Login/Login";
 import { User } from "./types/User";
+import { Session } from "inspector";
 
 function App() {
-  const [user] = useState<User>(new User(-1, "", ""));
+  const [user] = useState<User | null>(null);
 
   return (
     <>

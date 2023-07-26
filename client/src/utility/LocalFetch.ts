@@ -1,3 +1,4 @@
+import { User } from "../types/User";
 
 export enum HttpMethod {
   GET = 'GET',
@@ -9,13 +10,20 @@ export enum HttpMethod {
 
 const API_PATH = "http://localhost:3000/"
 
-export default async function localFetch(path: string, method: HttpMethod, data?: object): Promise<object> {
+export default async function localFetch({ path, method, data, user }: { path: string, method: HttpMethod, data?: object, user?: User }): Promise<object> {
+
+  const reqHead: HeadersInit = new Headers();
+  reqHead.set('Content-Type', 'application/json');
+  if (user) {
+    reqHead.append('X-NAMETHEM-UID', user.user_id.toString());
+    reqHead.append('X-NAMETHEM-SID', user.session_id?.toString() || '');
+    reqHead.append('X-NAMETHEM-SESSION', user.session || '');
+  }
+
   const response = await fetch(API_PATH + path, {
     method: method,
     mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: reqHead,
     body: data ? JSON.stringify(data) : undefined
   });
 
