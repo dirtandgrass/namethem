@@ -5,6 +5,14 @@ import { auth_salt } from '../app';
 const prisma = new PrismaClient()
 
 
+export type UserData = {
+  user_id?: number;
+  username?: string;
+  email?: string;
+  message: string;
+  success: boolean;
+}
+
 
 export default class User {
 
@@ -25,6 +33,7 @@ export default class User {
 
   static async Register(username: string, email: string, password: string): Promise<{ message: string, user: User, success: boolean } | { message: string, success: boolean } | null> {
 
+    //console.log("Register", username, email, password);
     const salt = bcrypt.genSaltSync(auth_salt);
     const hash = bcrypt.hashSync(password, salt);
     const validation_code = this.randomHash();
@@ -81,15 +90,14 @@ export default class User {
   }
 
   static async SessionLogin(user_id: number, session_id: number, user_hash: string, extend: boolean = false): Promise<{ user_id?: number, username?: string, email?: string, message: string, success: boolean }> {
-    //console.log("SessionLogin", user_id, session_id, user_hash, extend);
+
     const session = await prisma.session.findFirst(
       { where: { session_id: session_id, user_id: user_id, expires: { gt: new Date() } } }
     );
 
-
-
     if (session === null) return { message: "User not logged in", success: false };
-    const isMatch = bcrypt.compareSync(user_hash, session.hash); console.log(session)
+    const isMatch = bcrypt.compareSync(user_hash, session.hash);
+
     if (!isMatch) return { message: "User not logged in", success: false }
 
     if (extend) {

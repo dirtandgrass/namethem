@@ -12,6 +12,7 @@ import headerauth from './middleware/headerauth';
 import nameRouter from './routes/name';
 import sourceRouter from './routes/source';
 import userRouter from './routes/user';
+import ratingRouter from './routes/rating';
 import cors from 'cors';
 
 
@@ -46,10 +47,8 @@ app.use(headerauth);
 
 app.use('/name', nameRouter);
 app.use('/source', sourceRouter);
-
-
-
 app.use('/user', userRouter);
+app.use('/rating', ratingRouter);
 
 // app.get('/', (req, res) => {
 //   res.send('Express + TypeScript Server');

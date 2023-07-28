@@ -69,15 +69,20 @@ router.post("/login", async function (req: Request, res: Response, next: NextFun
 //register
 router.post("/", async function (req: Request, res: Response) {
 
-  const regResult = await User.Register(req.body.username, req.body.email, req.body.password);
+  if (!req.body.register_email || !req.body.register_password || !req.body.register_username) {
+    res.json({ message: "User not created", success: false });
+    return;
+  }
+  const regResult = (await User.Register(req.body.register_username, req.body.register_email, req.body.register_password) as any);
 
-  if (regResult?.success) {
-    // send validation email
-    res.json({ message: "User created", success: true });
+  if (regResult?.success && regResult.user?.username) {
+    // TODO: send validation email
+    res.json({ message: `User ${regResult.user.username} created, please check your email to validate`, success: true });
+    return;
   }
 
   res.json({ message: "User not created", success: false });
-
+  return;
 });
 
 

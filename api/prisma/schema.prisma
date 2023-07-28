@@ -13,6 +13,7 @@ model name {
   name                                  String        @db.VarChar
   male                                  Boolean       @default(false)
   female                                Boolean       @default(false)
+  rating                                rating[]
   similar_similar_name_idToname         similar[]     @relation("similar_name_idToname")
   similar_similar_similar_name_idToname similar[]     @relation("similar_similar_name_idToname")
   source_name                           source_name[]
@@ -62,5 +63,28 @@ model user {
   date_created    DateTime  @default(dbgenerated("CURRENT_DATE")) @db.Date
   validated       Boolean   @default(false)
   validation_code String?   @db.VarChar(256)
+  group           group[]
+  rating          rating[]
   session         session[]
+}
+
+model rating {
+  rating_id Int     @id(map: "name_rating_pk") @default(autoincrement())
+  user_id   Int
+  name_id   Int
+  rating    Decimal @db.Decimal
+  group_id  Int
+  name      name    @relation(fields: [name_id], references: [name_id], onDelete: NoAction, onUpdate: NoAction, map: "name_rating_fk")
+  user      user    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "name_rating_fk_1")
+  group     group   @relation(fields: [group_id], references: [group_id], onDelete: NoAction, onUpdate: NoAction, map: "rating_fk")
+
+  @@unique([user_id, name_id, group_id], map: "rating_un")
+}
+
+model group {
+  group_id      Int      @id(map: "group_pk") @default(autoincrement())
+  name          String?  @db.VarChar
+  owner_user_id Int
+  user          user     @relation(fields: [owner_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "group_fk")
+  rating        rating[]
 }
