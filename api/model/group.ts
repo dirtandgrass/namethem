@@ -17,12 +17,25 @@ export default class Group {
     let group_id = 0;
 
     try {
-      const result = await prisma.group.create({ data: { name: name, description: description, owner_user_id: user_id } });
+      const result = await prisma.group.create({ data: { name: name, description: description, created_user_id: user_id } });
       group_id = result.group_id;
+
+
+
     } catch (e) {
       console.log(e);
       return { "message": "unable to create group", "success": false };
     }
+
+
+    try {
+      await prisma.group_user.create({ data: { group_id, user_id, role: "admin", accepted: true } });
+
+    } catch (e) {
+      console.log(e);
+      return { "message": "created group but unable to assign admin", "success": false, "group_id": group_id };
+    }
+
 
     return { "message": "success", "success": true, "group_id": group_id };
 
@@ -38,7 +51,7 @@ export default class Group {
 
 
     try {
-      const lookup = await prisma.group.findFirst({ where: { group_id: group_id, owner_user_id: user_id } });
+      const lookup = await prisma.group.findFirst({ where: { group_id: group_id, created_user_id: user_id } });
       console.log(lookup);
     } catch (e) {
       console.log(e);
@@ -50,12 +63,48 @@ export default class Group {
 
     try {
       await prisma.group_user.create({ data: { group_id, user_id: guest_user_id, invite_key } });
+      // TODO: send invite email
+
     } catch (e) {
       console.log(e);
       return { "message": "unable to invite user", "success": false };
     }
 
     return { "message": "success", "success": true };
+  }
+
+  static async acceptInvite(group_id: number, invite_key: string): Promise<{ message: string, success: boolean }> {
+    // TODO: stub
+    return { "message": "success", "success": false };
+  }
+
+  // static async getOwnedGroups(): Promise<{ message: string, count?: number, data?: Record<string, unknown>[], success: boolean }> {
+  //   const user_id = AuthUser?.user_id || 0;
+  //   if (user_id === 0) return { "message": "not logged in", "success": false };
+
+  //   try {
+  //     const result = await prisma.group.findMany({ where: { created_user_id: user_id } });
+  //     return { "message": "success", "success": true, "count": result.length, "data": result };
+  //   } catch (e) {
+  //     console.log(e);
+  //     return { "message": "unable to get groups", "success": false };
+  //   }
+
+  // }
+
+  static async getGroups(): Promise<{ message: string, count?: number, data?: Record<string, unknown>[], success: boolean }> {
+    const user_id = AuthUser?.user_id || 0;
+    if (user_id === 0) return { "message": "not logged in", "success": false };
+
+    try {
+      const result = await prisma.group_user.findMany({ where: { user_id: user_id }, include: { group: true } });
+      return { "message": "success", "success": true, "count": result.length, "data": result };
+    } catch (e) {
+      console.log(e);
+      return { "message": "unable to get groups", "success": false };
+    }
+
+
   }
 
 }

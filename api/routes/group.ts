@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === "development") {
   router.use(cors());
 }
 
-/* get the list of sources */
+/* create a group */
 router.post("/", async function (req: Request, res: Response) {
 
   const result = await Group.createGroup(req.body.name, req.body.description);
@@ -15,10 +15,19 @@ router.post("/", async function (req: Request, res: Response) {
   res.json(result);
 });
 
-// router.get("/name/:id(\\d+)/", async function (req: Request, res: Response) {
+/*invite user to group*/
+router.post("/:group_id(\\d+)/invite", async function (req: Request, res: Response) {
 
-//   const result = await Source.getSourcesForNameId(parseInt(req.params.id));
-//   res.json(result);
-// });
+  const result = await Group.inviteUser(parseInt(req.params.group_id), req.body.user_id);
+
+  res.json(result);
+});
+
+/*list groups*/
+router.get("/", async function (req: Request, res: Response) {
+  const result = await Group.getGroups();
+
+  res.json(result);
+});
 
 export default router;

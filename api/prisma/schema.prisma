@@ -83,13 +83,13 @@ model rating {
 }
 
 model group {
-  group_id      Int          @id(map: "group_pk") @default(autoincrement())
-  name          String?      @db.VarChar
-  owner_user_id Int
-  description   String?      @db.VarChar
-  user          user         @relation(fields: [owner_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "group_fk")
-  group_user    group_user[]
-  rating        rating[]
+  group_id        Int          @id(map: "group_pk") @default(autoincrement())
+  name            String?      @db.VarChar
+  created_user_id Int
+  description     String?      @db.VarChar
+  user            user         @relation(fields: [created_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "group_fk")
+  group_user      group_user[]
+  rating          rating[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -101,6 +101,12 @@ model group_user {
   invite_key    String? @db.VarChar(256)
   email         String? @db.VarChar
   accepted      Boolean @default(false)
+  role          role?
   group         group   @relation(fields: [group_id], references: [group_id], onDelete: NoAction, onUpdate: NoAction, map: "group_user_fk")
   user          user?   @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "group_user_fk_1")
+}
+
+enum role {
+  admin
+  participant
 }

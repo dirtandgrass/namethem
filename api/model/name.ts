@@ -67,7 +67,7 @@ export default class Name {
     //console.log(query);
     const data: Record<string, unknown> = await prisma.$queryRawUnsafe(query);
 
-    const resultObj = { count, source_ids, sex: Sex[sex], data }
+    const resultObj = { message: "found records", count, source_ids, sex: Sex[sex], data, success: true }
 
     return resultObj
   }
