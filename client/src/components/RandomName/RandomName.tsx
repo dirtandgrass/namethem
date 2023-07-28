@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import localFetch from "../../utility/LocalFetch";
+import { User } from "../../types/User";
+import useStorage from "../../hooks/useStorage";
 
 type Name = {
   name_id: number;
@@ -13,7 +16,7 @@ type NameResult = {
   length: number;
 };
 
-const RandomName: React.FC = () => {
+function RandomName({ user }: { user: User | undefined | null }) {
   const [data, setData] = useState<NameResult>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<{ message: string; name: string } | null>(
@@ -24,12 +27,12 @@ const RandomName: React.FC = () => {
     // Function to fetch data from the API
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/name?count=2");
+        const response = await localFetch({
+          path: "name/?count=10",
+          user: user || undefined,
+        });
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data: NameResult = await response.json();
+        const data = response as NameResult;
         //console.log(data);
         setData(data); // Set the fetched data in the state
       } catch (error: unknown) {
@@ -71,6 +74,6 @@ const RandomName: React.FC = () => {
       </ul>
     </div>
   );
-};
+}
 
 export default RandomName;

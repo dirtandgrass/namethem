@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { auth_salt } from '../app';
+import { randomHash } from '../utility/randomHash';
 
 const prisma = new PrismaClient()
 
@@ -16,10 +17,7 @@ export type UserData = {
 
 export default class User {
 
-  static randomHash(): string {
-    const salt = bcrypt.genSaltSync(auth_salt);
-    return bcrypt.hashSync(Math.random().toString(), salt);
-  }
+
 
   static async getUsers(): Promise<{ count: number, data: User[] }> {
 
@@ -31,12 +29,12 @@ export default class User {
   }
 
 
-  static async Register(username: string, email: string, password: string): Promise<{ message: string, user: User, success: boolean } | { message: string, success: boolean } | null> {
+  static async Register(username: string, email: string, password: string): Promise<{ message: string, user?: UserData, success: boolean }> {
 
     //console.log("Register", username, email, password);
     const salt = bcrypt.genSaltSync(auth_salt);
     const hash = bcrypt.hashSync(password, salt);
-    const validation_code = this.randomHash();
+    const validation_code = randomHash();
 
     let user: User | null = null;
     try {
@@ -56,7 +54,7 @@ export default class User {
     }
 
 
-    return { user: user, message: "User created", success: true };
+    return { user: user as UserData, message: "User created", success: true };
   }
 
 
@@ -109,7 +107,7 @@ export default class User {
 
   static async CreateSession(user_id: number): Promise<{ message: string; success: boolean; session?: string, session_id?: number }> {
 
-    const user_hash = this.randomHash();
+    const user_hash = randomHash();
     const hash = bcrypt.hashSync(user_hash, auth_salt);
 
     const session = await prisma.session.create(

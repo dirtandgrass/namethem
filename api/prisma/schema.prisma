@@ -56,14 +56,15 @@ model session {
 }
 
 model user {
-  user_id         Int       @id(map: "user_pk") @default(autoincrement())
-  username        String    @db.VarChar
-  email           String    @unique(map: "user_un") @db.VarChar
-  hash            String    @db.VarChar(256)
-  date_created    DateTime  @default(dbgenerated("CURRENT_DATE")) @db.Date
-  validated       Boolean   @default(false)
-  validation_code String?   @db.VarChar(256)
+  user_id         Int          @id(map: "user_pk") @default(autoincrement())
+  username        String       @unique(map: "user_username") @db.VarChar
+  email           String       @unique(map: "user_un") @db.VarChar
+  hash            String       @db.VarChar(256)
+  date_created    DateTime     @default(dbgenerated("CURRENT_DATE")) @db.Date
+  validated       Boolean      @default(false)
+  validation_code String?      @db.VarChar(256)
   group           group[]
+  group_user      group_user[]
   rating          rating[]
   session         session[]
 }
@@ -82,9 +83,24 @@ model rating {
 }
 
 model group {
-  group_id      Int      @id(map: "group_pk") @default(autoincrement())
-  name          String?  @db.VarChar
+  group_id      Int          @id(map: "group_pk") @default(autoincrement())
+  name          String?      @db.VarChar
   owner_user_id Int
-  user          user     @relation(fields: [owner_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "group_fk")
+  description   String?      @db.VarChar
+  user          user         @relation(fields: [owner_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "group_fk")
+  group_user    group_user[]
   rating        rating[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model group_user {
+  group_user_id Int     @id(map: "group_user_pk") @default(autoincrement())
+  group_id      Int
+  user_id       Int?
+  weight        Decimal @default(1) @db.Decimal
+  invite_key    String? @db.VarChar(256)
+  email         String? @db.VarChar
+  accepted      Boolean @default(false)
+  group         group   @relation(fields: [group_id], references: [group_id], onDelete: NoAction, onUpdate: NoAction, map: "group_user_fk")
+  user          user?   @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "group_user_fk_1")
 }

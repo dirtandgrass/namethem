@@ -5,19 +5,19 @@ import Menu from "./components/Menu/Menu";
 
 import Login from "./components/Login/Login";
 import { User } from "./types/User";
-import { Session } from "inspector";
+import useStorage from "./hooks/useStorage";
 
 function App() {
-  const [user] = useState<User | null>(null);
+  const [user, setUser] = useStorage<User>("user", null, "local");
 
   return (
     <>
       <header className="App-header">
         <Menu />
-        <Login user={user} />
+        <Login user={user} setUser={setUser} />
       </header>
       <main>
-        <RandomName />
+        <RandomName user={user} />
       </main>
       <footer></footer>
     </>

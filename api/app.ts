@@ -13,7 +13,12 @@ import nameRouter from './routes/name';
 import sourceRouter from './routes/source';
 import userRouter from './routes/user';
 import ratingRouter from './routes/rating';
+import groupRouter from './routes/group';
+
 import cors from 'cors';
+
+
+
 
 
 dotenv.config();
@@ -49,6 +54,7 @@ app.use('/name', nameRouter);
 app.use('/source', sourceRouter);
 app.use('/user', userRouter);
 app.use('/rating', ratingRouter);
+app.use('/group', groupRouter);
 
 // app.get('/', (req, res) => {
 //   res.send('Express + TypeScript Server');

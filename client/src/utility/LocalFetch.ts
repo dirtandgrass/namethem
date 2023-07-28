@@ -10,7 +10,10 @@ export enum HttpMethod {
 
 const API_PATH = "http://localhost:3000/"
 
-export default async function localFetch({ path, method, data, user }: { path: string, method: HttpMethod, data?: object, user?: User }): Promise<object> {
+export default async function localFetch({ path, method, data, user }: { path: string, method?: HttpMethod, data?: object, user?: User }): Promise<object> {
+
+
+  if (method === undefined) method = HttpMethod.GET;
 
   const reqHead: HeadersInit = new Headers();
   reqHead.set('Content-Type', 'application/json');

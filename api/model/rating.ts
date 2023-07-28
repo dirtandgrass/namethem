@@ -16,8 +16,9 @@ export default class Rating {
       return { "message": "invalid data", "success": false };
     }
 
+
     try {
-      const result = await prisma.rating.upsert({
+      await prisma.rating.upsert({
         where: { user_id_name_id_group_id: { name_id, user_id, group_id } },
         update: { rating },
         create: { name_id, user_id, group_id, rating }

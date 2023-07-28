@@ -73,15 +73,22 @@ router.post("/", async function (req: Request, res: Response) {
     res.json({ message: "User not created", success: false });
     return;
   }
-  const regResult = (await User.Register(req.body.register_username, req.body.register_email, req.body.register_password) as any);
+  const regResult = await User.Register(req.body.register_username, req.body.register_email, req.body.register_password);
 
-  if (regResult?.success && regResult.user?.username) {
+  if (!regResult || !regResult.user) {
+    res.json({ message: "User not created", success: false });
+    return;
+  }
+
+  const user = regResult.user;
+
+  if (user.email) {
     // TODO: send validation email
     res.json({ message: `User ${regResult.user.username} created, please check your email to validate`, success: true });
     return;
   }
 
-  res.json({ message: "User not created", success: false });
+
   return;
 });
 
