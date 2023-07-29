@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import localFetch from "../../utility/LocalFetch";
 import { User } from "../../types/User";
 import useStorage from "../../hooks/useStorage";
+import Name from "../Name/Name";
 
-type Name = {
+export type Name = {
   name_id: number;
   name: string;
   male: boolean;
@@ -18,12 +19,16 @@ type NameResult = {
 
 function RandomName({ user }: { user: User | undefined | null }) {
   const [data, setData] = useState<NameResult>();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<{ message: string; name: string } | null>(
     null
   );
 
+  const [names, setNames] = useState<Name[]>([]);
+
   useEffect(() => {
+    setLoading(true);
     // Function to fetch data from the API
     const fetchData = async () => {
       try {
@@ -35,6 +40,7 @@ function RandomName({ user }: { user: User | undefined | null }) {
         const data = response as NameResult;
         //console.log(data);
         setData(data); // Set the fetched data in the state
+        setNames(data.data);
       } catch (error: unknown) {
         const tError = (error as Error) || {
           message: "Unknown error",
@@ -68,8 +74,8 @@ function RandomName({ user }: { user: User | undefined | null }) {
     <div>
       <h1>Here are {data?.count} names for you:</h1>
       <ul>
-        {data?.data.map((item) => (
-          <li key={item.name_id}>{item.name}</li>
+        {names.map((item, i) => (
+          <Name names={names} setNames={setNames} name_index={i} user={user} />
         ))}
       </ul>
     </div>
