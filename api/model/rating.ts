@@ -30,4 +30,18 @@ export default class Rating {
     return { "message": "success", "success": true };
   }
 
+  static async getRating(name_id: number, group_id: number = 1): Promise<{ message: string, success: boolean, rating?: number }> {
+    const user_id = AuthUser?.user_id || 0;
+
+    if (user_id === 0) return { "message": "not logged in", "success": false };
+    try {
+      const result = await prisma.rating.findFirst({ where: { name_id, user_id, group_id } });
+      if (result === null) return { "message": "no rating found", "success": false };
+      return { "message": "success", "success": true, rating: result.rating as unknown as number };
+    } catch (e) {
+      console.log(e);
+      return { "message": "unable to get rating", "success": false };
+    }
+  }
+
 }
