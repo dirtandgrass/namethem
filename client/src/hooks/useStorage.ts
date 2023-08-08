@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 
 export default function useStorage<T>(key: string, initVal: T | null, sessionOrStorage: "session" | "local" = "session") {

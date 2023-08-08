@@ -1,4 +1,4 @@
-//import "./RandomName.css";
+import "./Menu.css";
 
 function Menu() {
   return (

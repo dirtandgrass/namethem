@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import localFetch from "../../utility/LocalFetch";
 import { User } from "../../types/User";
-import useStorage from "../../hooks/useStorage";
 import Name from "../Name/Name";
+import "./RandomName.css";
 
-export type Name = {
+export type NameType = {
   name_id: number;
   name: string;
   male: boolean;
@@ -13,7 +13,7 @@ export type Name = {
 
 type NameResult = {
   count: number;
-  data: Name[];
+  data: NameType[];
   length: number;
 };
 
@@ -25,7 +25,7 @@ function RandomName({ user }: { user: User | undefined | null }) {
     null
   );
 
-  const [names, setNames] = useState<Name[]>([]);
+  const [names, setNames] = useState<NameType[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -58,7 +58,7 @@ function RandomName({ user }: { user: User | undefined | null }) {
     return () => {
       // Perform any cleanup (e.g., canceling pending requests) if needed
     };
-  }, []);
+  }, [user]);
 
   // Display the appropriate content based on loading and error states
   if (loading) {
@@ -71,7 +71,7 @@ function RandomName({ user }: { user: User | undefined | null }) {
 
   // Render the fetched data
   return (
-    <div>
+    <div className="random-name">
       <h1>Here are {data?.count} names for you:</h1>
       <ul>
         {names.map((item, i) => (

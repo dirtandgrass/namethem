@@ -4,6 +4,8 @@ import { randomHash } from '../utility/randomHash';
 const prisma = new PrismaClient()
 
 
+export type Role = "admin" | "participant";
+
 export default class Group {
 
 
@@ -42,7 +44,9 @@ export default class Group {
 
   }
 
-  static async inviteUser(group_id: number, guest_user_id: number): Promise<{ message: string, success: boolean }> {
+
+
+  static async inviteUser(group_id: number, guest_user_id: number, role: Role = "participant"): Promise<{ message: string, success: boolean }> {
     const user_id = AuthUser?.user_id || 0;
     if (user_id === 0) return { "message": "not logged in", "success": false };
     if (!Number.isInteger(group_id) || !Number.isInteger(guest_user_id)) {
@@ -62,7 +66,7 @@ export default class Group {
 
 
     try {
-      await prisma.group_user.create({ data: { group_id, user_id: guest_user_id, invite_key } });
+      await prisma.group_user.create({ data: { group_id, user_id: guest_user_id, invite_key, role } });
       // TODO: send invite email
 
     } catch (e) {
@@ -74,8 +78,30 @@ export default class Group {
   }
 
   static async acceptInvite(group_id: number, invite_key: string): Promise<{ message: string, success: boolean }> {
-    // TODO: stub
-    return { "message": "success", "success": false };
+    const user_id = AuthUser?.user_id || 0;
+    if (user_id === 0) return { "message": "not logged in", "success": false };
+
+    if (!Number.isInteger(group_id)) return { "message": "invalid data", "success": false };
+
+    console.log(group_id, user_id, invite_key);
+    try {
+      const result = await prisma.group_user.update({
+        where: {
+          group_id_user_id: {
+            group_id: group_id, user_id: user_id
+          },
+          invite_key: invite_key,
+          accepted: false
+        },
+        data: { accepted: true }
+      });
+    } catch (e) {
+      console.log("attempt to accept invite failed, invalid key or already accepted");
+      return { "message": "attempt to accept invite failed, invalid key or already accepted", "success": false };
+    }
+
+    return { "message": "success", "success": true };
+
   }
 
   // static async getOwnedGroups(): Promise<{ message: string, count?: number, data?: Record<string, unknown>[], success: boolean }> {

@@ -54,7 +54,15 @@ export default class User {
     }
 
 
-    return { user: user as UserData, message: "User created", success: true };
+    const resUser = user as UserData;
+
+    // join default group
+    try {
+      await prisma.group_user.create({ data: { group_id: 1, user_id: resUser.user_id, accepted: true } });
+    } catch (error) {
+      return { user: resUser, message: "User created, but unable to join default group", success: false };
+    }
+    return { user: resUser, message: "User created", success: true };
   }
 
 

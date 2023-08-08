@@ -1,10 +1,8 @@
-import localFetch, { HttpMethod } from "../../utility/LocalFetch";
 import { User } from "../../types/User";
 import "./Login.css";
-import useStorage from "../../hooks/useStorage";
-import { useEffect, useState } from "react";
+
+import { useEffect } from "react";
 import LoginForm from "./LoginForm/LoginForm";
-import RegistrationForm from "./RegistrationForm/RegistrationForm";
 
 function Login({
   user,
@@ -13,8 +11,6 @@ function Login({
   user: User | null | undefined;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }) {
-  const [isRegister, setIsRegister] = useState<boolean>(false);
-
   useEffect(() => {
     if (!user) {
       logOut();
@@ -34,8 +30,22 @@ function Login({
     }
   });
 
+  let registrationForm = document.getElementById(
+    "registration-form"
+  ) as HTMLDialogElement;
+
   function logOut() {
     setUser(null);
+  }
+
+  function showRegister() {
+    console.log(registrationForm);
+    if (!registrationForm) {
+      registrationForm = document.getElementById(
+        "registration-form"
+      ) as HTMLDialogElement;
+    }
+    registrationForm?.showModal();
   }
 
   if (user?.isLoggedIn && user?.isLoggedIn()) {
@@ -47,26 +57,15 @@ function Login({
   } else {
     let form: JSX.Element;
 
-    if (isRegister) {
-      form = <RegistrationForm />;
-    } else {
-      form = <LoginForm setUser={setUser} />;
-    }
+    form = <LoginForm setUser={setUser} />;
 
     return (
-      <aside className="Login">
-        <h2>{isRegister ? "Sign Up!" : "Log In"}</h2>
-
-        {form}
-        <button
-          type="button"
-          onClick={() => {
-            setIsRegister(!isRegister);
-          }}
-        >
-          {isRegister ? "Cancel" : "Register New User"}
-        </button>
-      </aside>
+      <div className="Login">
+        <div>{form}</div>
+        <div>
+          <button onClick={showRegister}>Register</button>
+        </div>
+      </div>
     );
   }
 }

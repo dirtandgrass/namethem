@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import Group from '../model/group';
+import Group, { Role } from '../model/group';
 import cors from 'cors';
 const router = Router();
 
@@ -15,10 +15,23 @@ router.post("/", async function (req: Request, res: Response) {
   res.json(result);
 });
 
+/* accept invite to group */
+router.post("/:group_id(\\d+)/accept", async function (req: Request, res: Response) {
+
+  const key = req.body.key as string;
+  const group_id = parseInt(req.params.group_id);
+
+  const result = await Group.acceptInvite(group_id, key);
+
+  res.json(result);
+});
+
 /*invite user to group*/
 router.post("/:group_id(\\d+)/invite", async function (req: Request, res: Response) {
 
-  const result = await Group.inviteUser(parseInt(req.params.group_id), req.body.user_id);
+  const role: Role = req.body.role || "participant";
+
+  const result = await Group.inviteUser(parseInt(req.params.group_id), req.body.user_id, role);
 
   res.json(result);
 });

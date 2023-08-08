@@ -71,6 +71,7 @@ router.post("/", async function (req: Request, res: Response) {
 
   if (!req.body.register_email || !req.body.register_password || !req.body.register_username) {
     res.json({ message: "User not created", success: false });
+    console.log(req.body);
     return;
   }
   const regResult = await User.Register(req.body.register_username, req.body.register_email, req.body.register_password);

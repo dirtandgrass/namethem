@@ -94,16 +94,19 @@ model group {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model group_user {
-  group_user_id Int     @id(map: "group_user_pk") @default(autoincrement())
+  group_user_id Int       @id(map: "group_user_pk") @default(autoincrement())
   group_id      Int
   user_id       Int?
-  weight        Decimal @default(1) @db.Decimal
-  invite_key    String? @db.VarChar(256)
-  email         String? @db.VarChar
-  accepted      Boolean @default(false)
+  weight        Decimal   @default(1) @db.Decimal
+  invite_key    String?   @db.VarChar(256)
+  email         String?   @db.VarChar
+  accepted      Boolean   @default(false)
   role          role?
-  group         group   @relation(fields: [group_id], references: [group_id], onDelete: NoAction, onUpdate: NoAction, map: "group_user_fk")
-  user          user?   @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "group_user_fk_1")
+  invite_date   DateTime? @default(now()) @db.Timestamp(6)
+  group         group     @relation(fields: [group_id], references: [group_id], onDelete: NoAction, onUpdate: NoAction, map: "group_user_fk")
+  user          user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "group_user_fk_1")
+
+  @@unique([group_id, user_id], map: "group_user_un")
 }
 
 enum role {
