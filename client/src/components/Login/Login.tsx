@@ -39,7 +39,6 @@ function Login({
   }
 
   function showRegister() {
-    console.log(registrationForm);
     if (!registrationForm) {
       registrationForm = document.getElementById(
         "registration-form"
@@ -50,9 +49,9 @@ function Login({
 
   if (user?.isLoggedIn && user?.isLoggedIn()) {
     return (
-      <div className="login">
-        <button onClick={logOut}>Log Out</button>
-      </div>
+      <button type="button" onClick={logOut}>
+        Log Out
+      </button>
     );
   } else {
     let form: JSX.Element;
@@ -60,11 +59,11 @@ function Login({
     form = <LoginForm setUser={setUser} />;
 
     return (
-      <div className="login">
-        <div>
-          {form}
-          <button onClick={showRegister}>Register</button>
-        </div>
+      <div>
+        {form}
+        <button type="button" onClick={showRegister}>
+          Register
+        </button>
       </div>
     );
   }

@@ -14,13 +14,21 @@ code {
 button {
 
   display: inline-block;
-  background-color: rgba(210,210,210,0.8);
+  background: linear-gradient(45deg,rgba(210,210,210,0.3),rgba(255,255,255,0.7));
   font-size: 1.05rem;
   border-radius: 5px;
+  border: 2px solid rgb(153, 153, 255,0.7);
 }
-input {
+input,select {
 border-radius: 5px;
 border: 1px solid rgb(153, 153, 255);
 padding: 0.5dvh 1dvw;
-font-size: 1.05rem;
+
+
+}
+
+
+
+select {
+  background: linear-gradient(45deg,rgba(210,210,210,0.3),rgba(255,255,255,0.7));
 }

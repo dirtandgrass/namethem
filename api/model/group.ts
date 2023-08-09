@@ -134,4 +134,22 @@ export default class Group {
 
   }
 
+  /* determine if a user is a member of a group */
+  static async isMember(group_id: number): Promise<{ message: string, isMember: boolean, success: boolean }> {
+    const user_id = AuthUser?.user_id || 0;
+    if (user_id === 0) return { "message": "not logged in", isMember: false, "success": false };
+
+
+    try {
+      const result = await prisma.group_user.findFirst({ where: { group_id: group_id, user_id: user_id } });
+
+      if (result === null) return { "message": "not a member", isMember: false, "success": true };
+      return { "message": "is a member", isMember: true, "success": true };
+    } catch (e) {
+      console.log(e);
+      return { "message": "unable to get groups", isMember: false, "success": false };
+    }
+
+  }
+
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import localFetch from "../../utility/LocalFetch";
 import { User } from "../../types/User";
-import "./GroupInfo.css";
 
 export type GroupMembershipType = {
   group_id: number;
@@ -10,19 +9,22 @@ export type GroupMembershipType = {
   name: string;
 };
 
-export default function GroupInfo({ user }: { user: User | undefined | null }) {
+export default function GroupInfo({
+  user,
+  group,
+  setGroup,
+}: {
+  user: User | undefined | null;
+  group: GroupMembershipType | undefined | null;
+  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType | null>>;
+}) {
   const [groups, setGroups] = useState<GroupMembershipType[]>([]);
-
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<{ message: string; name: string } | null>(
-    null
-  );
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user?.isLoggedIn || !user?.isLoggedIn()) return;
-    setLoading(true);
-    // Function to fetch data from the API
     const fetchData = async () => {
+      if (!user?.isLoggedIn || !user?.isLoggedIn()) return;
+      setLoading(true);
       try {
         const response = await localFetch({
           path: "group/",
@@ -30,7 +32,6 @@ export default function GroupInfo({ user }: { user: User | undefined | null }) {
         });
 
         const data = response as any;
-        console.log(data);
 
         if (data?.data && Array.isArray(data.data)) {
           const rData: GroupMembershipType[] = data.data.map((r: any) => {
@@ -45,40 +46,51 @@ export default function GroupInfo({ user }: { user: User | undefined | null }) {
           setGroups(rData); // Set the fetched data in the state
         }
       } catch (error: unknown) {
-        const tError = (error as Error) || {
-          message: "Unknown error",
-          name: "Unknown error",
-        };
-        setError({ message: tError.message, name: tError.name }); // Set error state if something goes wrong
-      } finally {
-        setLoading(false); // Set loading state to false once the fetch is done
+        console.error(error);
       }
+
+      setLoading(false);
     };
 
     fetchData(); // Call the fetch function when the component mounts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+  useEffect(() => {
+    if (groups.length > 0 && group) {
+      setGroup(groups.find((g) => g.group_id === group.group_id) || groups[0]);
+    }
+  }, [groups, group, setGroup]);
+
+  function selectedGroupChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const selectedGroup = groups.find(
+      (g) => g.group_id + "" === e.target.value
+    );
+    if (selectedGroup && selectedGroup !== group) {
+      setGroup(selectedGroup);
+    }
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  if (loading) return <div className="group-info">Loading...</div>;
 
-  if (user?.isLoggedIn && user?.isLoggedIn()) {
-    return (
-      <div className="group-info">
+  if (!user?.isLoggedIn || !user?.isLoggedIn()) return <></>;
+
+  return (
+    <div className="group-info">
+      <div>Glob:</div>
+      <select
+        name="group-select"
+        onChange={selectedGroupChange}
+        value={group?.group_id}
+      >
         {groups.map((g) => {
           return (
-            <div key={g.group_id} className="group-info-group-name">
+            <option key={g.group_id} value={g.group_id}>
               {g.name}
-            </div>
+            </option>
           );
         })}
-      </div>
-    );
-  }
-
-  return <div className="group-info"></div>;
+      </select>
+    </div>
+  );
 }
