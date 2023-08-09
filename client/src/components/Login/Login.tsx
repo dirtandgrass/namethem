@@ -50,9 +50,9 @@ function Login({
 
   if (user?.isLoggedIn && user?.isLoggedIn()) {
     return (
-      <aside className="Login">
+      <div className="login">
         <button onClick={logOut}>Log Out</button>
-      </aside>
+      </div>
     );
   } else {
     let form: JSX.Element;
@@ -60,9 +60,9 @@ function Login({
     form = <LoginForm setUser={setUser} />;
 
     return (
-      <div className="Login">
-        <div>{form}</div>
+      <div className="login">
         <div>
+          {form}
           <button onClick={showRegister}>Register</button>
         </div>
       </div>

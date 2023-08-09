@@ -53,11 +53,6 @@ function RandomName({ user }: { user: User | undefined | null }) {
     };
 
     fetchData(); // Call the fetch function when the component mounts
-
-    // Cleanup function (optional)
-    return () => {
-      // Perform any cleanup (e.g., canceling pending requests) if needed
-    };
   }, [user]);
 
   // Display the appropriate content based on loading and error states
@@ -75,7 +70,13 @@ function RandomName({ user }: { user: User | undefined | null }) {
       <h1>Here are {data?.count} names for you:</h1>
       <ul>
         {names.map((item, i) => (
-          <Name names={names} setNames={setNames} name_index={i} user={user} />
+          <Name
+            names={names}
+            setNames={setNames}
+            name_index={i}
+            user={user}
+            key={i}
+          />
         ))}
       </ul>
     </div>

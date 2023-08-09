@@ -3,6 +3,13 @@ import localFetch, { HttpMethod } from "../../../utility/LocalFetch";
 import { User } from "../../../types/User";
 
 function RegistrationForm() {
+  function closeDialog() {
+    const registrationForm = document.getElementById(
+      "registration-form"
+    ) as HTMLDialogElement;
+    registrationForm?.close();
+  }
+
   async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formEl = e.target as HTMLFormElement;
@@ -23,12 +30,14 @@ function RegistrationForm() {
     };
 
     if (result.success) {
+      closeDialog();
     } else {
     }
   }
 
   return (
     <dialog id="registration-form">
+      <h2>Register</h2>
       <form onSubmit={handleRegister}>
         <div className="form_input">
           <input
@@ -54,6 +63,9 @@ function RegistrationForm() {
           />
         </div>
         <div className="form_actions">
+          <button type="button" onClick={closeDialog}>
+            Cancel
+          </button>
           <button type="submit">Register</button>
         </div>
       </form>

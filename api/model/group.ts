@@ -118,12 +118,13 @@ export default class Group {
 
   // }
 
+  /* get groups the user is a member of, returns group_id, name, description, role */
   static async getGroups(): Promise<{ message: string, count?: number, data?: Record<string, unknown>[], success: boolean }> {
     const user_id = AuthUser?.user_id || 0;
     if (user_id === 0) return { "message": "not logged in", "success": false };
 
     try {
-      const result = await prisma.group_user.findMany({ where: { user_id: user_id }, include: { group: true } });
+      const result = await prisma.group_user.findMany({ where: { user_id: user_id }, select: { role: true, group_id: true, group: { select: { name: true, description: true } } } });
       return { "message": "success", "success": true, "count": result.length, "data": result };
     } catch (e) {
       console.log(e);

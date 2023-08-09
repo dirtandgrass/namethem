@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import localFetch from "../../utility/LocalFetch";
+import React from "react";
+
 import { NameType } from "../RandomName/RandomName";
 import { User } from "../../types/User";
 

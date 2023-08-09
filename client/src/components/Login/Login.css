@@ -1,5 +1,18 @@
-.Login {
-  background-color: rgba(100, 100, 100, 0.2);
+.login, .login>div {
+
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  min-height: 4dvh;
+  gap: 2px;
+}
+
+.login {
+  background-color: rgba(100, 100, 100, 0.2);
+}
+
+.login form {
+  display: flex;
+  align-items: center;
+  gap:2px
 }

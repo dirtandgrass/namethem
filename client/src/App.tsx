@@ -7,6 +7,7 @@ import { User } from "./types/User";
 import useStorage from "./hooks/useStorage";
 import Logo from "./components/Logo/Logo";
 import RegistrationForm from "./components/Login/RegistrationForm/RegistrationForm";
+import GroupInfo from "./components/GroupInfo/GroupInfo";
 
 function App() {
   const [user, setUser] = useStorage<User>("user", null, "local");
@@ -18,6 +19,7 @@ function App() {
         <Menu />
 
         <Login user={user} setUser={setUser} />
+        <GroupInfo user={user} />
       </header>
       <main>
         <RandomName user={user} />

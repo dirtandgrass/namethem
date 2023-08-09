@@ -1,4 +1,4 @@
-//import "./Login.css";
+import "./LoginForm.css";
 import localFetch, { HttpMethod } from "../../../utility/LocalFetch";
 import { User } from "../../../types/User";
 
@@ -51,7 +51,7 @@ function LoginForm({
   }
 
   return (
-    <form onSubmit={handleLogin}>
+    <form className="login-form" onSubmit={handleLogin}>
       <div className="form_input">
         <input
           name="login_email"
@@ -69,10 +69,10 @@ function LoginForm({
         />
       </div>
       <div className="form_input">
-        <label htmlFor="create_session">Keep me logged in</label>
+        {/* <label htmlFor="create_session">Keep me logged in</label> */}
         <input
           name="create_session"
-          type="checkbox"
+          type="hidden"
           value="true"
           defaultChecked
         />

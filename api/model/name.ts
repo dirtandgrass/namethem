@@ -50,8 +50,6 @@ export default class Name {
 
 
     let sex_clause = "";
-
-
     if (sex !== Sex.all) {
       sex_clause = (source_clause.length > 0 ? "and " : "where ");
       if (sex == Sex.unisex) {
@@ -59,7 +57,6 @@ export default class Name {
       } else {
         sex_clause += `n.${Sex[sex]} = true ` // one sex
       }
-
     }
 
     const query = `select n.name_id, n.name, n.male, n.female from source_name sn join name n on n.name_id=sn.name_id ${source_clause} ${sex_clause} order by random() limit ${count}`;

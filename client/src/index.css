@@ -12,7 +12,15 @@ code {
 
 
 button {
-  border: none;
+
   display: inline-block;
-  background-color: transparent;
+  background-color: rgba(210,210,210,0.8);
+  font-size: 1.05rem;
+  border-radius: 5px;
+}
+input {
+border-radius: 5px;
+border: 1px solid rgb(153, 153, 255);
+padding: 0.5dvh 1dvw;
+font-size: 1.05rem;
 }
