@@ -15,9 +15,9 @@ router.get("/", async function (req: Request, res: Response) {
   res.json(result);
 });
 
-router.get("/name/:id(\\d+)/", async function (req: Request, res: Response) {
+router.get("/:name_id(\\d+)/", async function (req: Request, res: Response) {
 
-  const result = await Source.getSourcesForNameId(parseInt(req.params.id));
+  const result = await Source.getSourcesForNameId(parseInt(req.params.name_id));
   res.json(result);
 });
 

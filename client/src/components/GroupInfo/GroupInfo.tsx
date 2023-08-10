@@ -42,7 +42,6 @@ export default function GroupInfo({
               description: r.group?.description,
             };
           });
-
           setGroups(rData); // Set the fetched data in the state
         }
       } catch (error: unknown) {

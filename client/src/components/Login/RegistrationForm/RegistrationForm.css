@@ -3,11 +3,10 @@
   margin: 25dvh auto;
   position: relative;
   min-width: 30dvw;
-  border-color: rgb(234, 191, 225) rgb(153, 153, 255);
-  border-style: solid;
-  border-radius: 5px;
-  border-width: 6px;
-  padding: 2dvmin
+  border: var(--message-border);
+  border-color: var(--message-border-color);
+  border-radius: var(--message-border-radius);
+  padding: var(--message-padding);
 }
 
 #registration-form>form {

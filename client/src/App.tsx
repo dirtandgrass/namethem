@@ -20,12 +20,7 @@ function App() {
     "local"
   );
 
-  const nameTool =
-    !user?.isLoggedIn || !user?.isLoggedIn() ? (
-      <RandomNameList user={user} />
-    ) : (
-      <RateName user={user} group={group} />
-    );
+  const loggedIn = user?.isLoggedIn && user?.isLoggedIn();
 
   return (
     <>
@@ -34,11 +29,21 @@ function App() {
 
         <div className="login">
           <Login user={user} setUser={setUser} />
-          <GroupInfo user={user} group={group} setGroup={setGroup} />
+          {loggedIn ? (
+            <GroupInfo user={user} group={group} setGroup={setGroup} />
+          ) : (
+            <></>
+          )}
         </div>
         <Menu />
       </header>
-      <main>{nameTool}</main>
+      <main>
+        {loggedIn ? (
+          <RateName user={user} group={group} />
+        ) : (
+          <RandomNameList user={user} />
+        )}
+      </main>
       <RegistrationForm />
       <footer></footer>
     </>

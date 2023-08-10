@@ -45,29 +45,55 @@ function RateName({
   if (!user) {
     return <></>;
   }
-
+  const displaySettings = {
+    class: "rate-name",
+    genderText: "",
+  };
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className={displaySettings.class}>Loading...</div>;
   }
 
   if (!name) {
     return <div>No names to rate</div>;
   }
 
+  if (name.female && name.male) {
+    displaySettings.class += " unisex";
+    displaySettings.genderText = "Unisex";
+  } else if (name.female) {
+    displaySettings.class += " girl";
+    displaySettings.genderText = "Girl";
+  } else if (name.male) {
+    displaySettings.class += " boy";
+    displaySettings.genderText = "Boy";
+  }
+
   return (
-    <div className="rate-name">
-      <div>{name.name}</div>
-      {name.female ? <div>Girl</div> : <></>}
-      {name.male ? <div>Boy</div> : <></>}
-      <NameSource name={name} />
-      <div className="controls">
+    <div className={displaySettings.class}>
+      <div className="name-card">
+        <div className="name">{name.name}</div>
+        <div>
+          <div>
+            <strong>Sex</strong> <em>{displaySettings.genderText}</em>
+          </div>
+          <div>
+            <strong>Sources</strong>
+            <NameSource name={name} />
+          </div>
+        </div>
+      </div>
+      <div className="name-controls">
+        <button>No</button>
+        <button>Ugh</button>
         <button
           onClick={() => {
             fetchName();
           }}
         >
-          Another
+          Skip
         </button>
+        <button>Like</button>
+        <button>Love</button>
       </div>
     </div>
   );

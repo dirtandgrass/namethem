@@ -49,9 +49,14 @@ function Login({
 
   if (user?.isLoggedIn && user?.isLoggedIn()) {
     return (
-      <button type="button" onClick={logOut}>
-        Log Out
-      </button>
+      <div>
+        <p>
+          {user.username} &lt;{user.email}&gt;
+        </p>
+        <button type="button" onClick={logOut}>
+          Log Out
+        </button>
+      </div>
     );
   } else {
     let form: JSX.Element;
