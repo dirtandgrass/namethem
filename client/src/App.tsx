@@ -31,11 +31,12 @@ function App() {
     <>
       <header className="App-header">
         <Logo />
-        <Menu />
+
         <div className="login">
           <Login user={user} setUser={setUser} />
           <GroupInfo user={user} group={group} setGroup={setGroup} />
         </div>
+        <Menu />
       </header>
       <main>{nameTool}</main>
       <RegistrationForm />

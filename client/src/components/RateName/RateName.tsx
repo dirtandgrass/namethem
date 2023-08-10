@@ -4,6 +4,8 @@ import { NameType } from "../RandomNameList/RandomNameList";
 import { User } from "../../types/User";
 import { GroupMembershipType } from "../GroupInfo/GroupInfo";
 import localFetch from "../../utility/LocalFetch";
+import "./RateName.css";
+import NameSource from "../NameSource/NameSource";
 
 function RateName({
   user,
@@ -15,7 +17,7 @@ function RateName({
   const [loading, setLoading] = useState<boolean>(true);
   const [name, setName] = useState<NameType>();
 
-  const fetchData = async () => {
+  const fetchName = async () => {
     if (group?.group_id === undefined || user?.user_id === undefined) return;
     setLoading(true);
     try {
@@ -37,8 +39,8 @@ function RateName({
 
   useEffect(() => {
     // Function to fetch data from the API
-    fetchData(); // Call the fetch function when the component mounts
-  }, [group, user]);
+    fetchName(); // Call the fetch function when the component mounts
+  }, []);
 
   if (!user) {
     return <></>;
@@ -53,12 +55,15 @@ function RateName({
   }
 
   return (
-    <div>
+    <div className="rate-name">
       <div>{name.name}</div>
-      <div>
+      {name.female ? <div>Girl</div> : <></>}
+      {name.male ? <div>Boy</div> : <></>}
+      <NameSource name={name} />
+      <div className="controls">
         <button
           onClick={() => {
-            fetchData();
+            fetchName();
           }}
         >
           Another

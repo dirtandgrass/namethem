@@ -77,7 +77,7 @@ export default function GroupInfo({
 
   return (
     <div className="group-info">
-      <div>Glob:</div>
+      <div>Village:</div>
       <select
         name="group-select"
         onChange={selectedGroupChange}

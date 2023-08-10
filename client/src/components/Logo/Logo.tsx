@@ -1,5 +1,6 @@
+import "./Logo.css";
 function Logo() {
-  return <div>NameThem</div>;
+  return <div id="logo"></div>;
 }
 
 export default Logo;
