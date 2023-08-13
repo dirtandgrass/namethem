@@ -1,6 +1,6 @@
 
 
-public\static\
+public/static
 # Logs
 logs
 *.log
