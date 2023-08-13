@@ -60,7 +60,7 @@ router.get("/unrated", async function (req: Request, res: Response) {
   const { sex, source_ids } = parseSourceAndSex(req);
   console.log("unrated name 4 ", AuthUser);
   const result = await Name.getRandomUnratedName(AuthUser.user_id, group_id, sex, source_ids);
-
+  console.log("unrated name 5 ", AuthUser, result);
   res.json(result);
 
 
