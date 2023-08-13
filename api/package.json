@@ -6,6 +6,7 @@
     "build": "npx tsc",
     "start": "node dist/app.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/app.js\"",
+    "deploy": "npm run build --prefix ../client",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
