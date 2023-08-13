@@ -1,11 +1,11 @@
 import "./LoginForm.css";
 import localFetch, { HttpMethod } from "../../../utility/LocalFetch";
-import { User } from "../../../types/User";
+import { User, defaultUser } from "../../../types/User";
 
 function LoginForm({
   setUser,
 }: {
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
 }) {
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,7 +47,7 @@ function LoginForm({
   }
 
   function logOut() {
-    setUser(null);
+    setUser(defaultUser);
   }
 
   return (

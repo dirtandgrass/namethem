@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 
-export default function useStorage<T>(key: string, initVal: T | null, sessionOrStorage: "session" | "local" = "session") {
+export default function useStorage<T>(key: string, initVal: T, sessionOrStorage: "session" | "local" = "session") {
 
 
   const [value, setValue] = useState(() => {

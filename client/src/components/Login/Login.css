@@ -1,4 +1,4 @@
-.login, .login>div {
+.login, .login>div, .login form {
 
   display: flex;
   justify-content: flex-end;
@@ -7,12 +7,16 @@
   gap: 1dvw;
 }
 
-.login {
-  background-color: rgba(100, 100, 100, 0.2);
+@media (max-width: 520px) {
+  .login, .login>div, .login form {
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 0;
+  }
 }
 
-.login form {
-  display: flex;
-  align-items: center;
-  gap:2px
+.login {
+  background-color: rgba(100, 100, 100, 0.2);
 }

@@ -1,4 +1,4 @@
-import { User } from "../../types/User";
+import { User, defaultUser } from "../../types/User";
 import "./Login.css";
 
 import { useEffect } from "react";
@@ -8,8 +8,8 @@ function Login({
   user,
   setUser,
 }: {
-  user: User | null | undefined;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  user: User | undefined;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
 }) {
   useEffect(() => {
     if (!user) {
@@ -35,7 +35,7 @@ function Login({
   ) as HTMLDialogElement;
 
   function logOut() {
-    setUser(null);
+    setUser(defaultUser);
   }
 
   function showRegister() {
