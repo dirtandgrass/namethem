@@ -36,3 +36,6 @@ export class User {
     this.session = session;
   }
 }
+
+
+export const defaultUser = new User(0, "guest", "n/a");
