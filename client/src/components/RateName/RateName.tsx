@@ -1,59 +1,45 @@
 import React, { useEffect, useState } from "react";
 
 import { NameType } from "../RandomNameList/RandomNameList";
-import { User } from "../../../../types/User";
-
+import { User } from "../../types/User";
+import { GroupMembershipType } from "../GroupInfo/GroupInfo";
+import localFetch from "../../utility/LocalFetch";
 import "./RateName.css";
 import NameSource from "../NameSource/NameSource";
-import { fetchName, rateName } from "../../../../remote/name";
-import { GroupMembershipType } from "../../../../types/Group";
-
-export enum NameRating {
-  No = 0,
-  Ugh = 0.25,
-  Like = 0.75,
-  Love = 1,
-}
 
 function RateName({
   user,
   group,
 }: {
-  user: User;
-  group: GroupMembershipType | undefined;
+  user: User | undefined | null;
+  group: GroupMembershipType | undefined | null;
 }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [name, setName] = useState<NameType>();
 
-  const next = async () => {
+  const fetchName = async () => {
     if (group?.group_id === undefined || user?.user_id === undefined) return;
     setLoading(true);
-    setName((await fetchName(group.group_id, user)) ?? undefined);
-    setLoading(false); // Set loading state to false once the fetch is done
-  };
+    try {
+      const response: any = await localFetch({
+        path: `name/unrated/?group_id=${group.group_id}`,
+        user: user,
+      });
 
-  const rate = async (rating: NameRating) => {
-    if (
-      group?.group_id === undefined ||
-      user?.user_id === undefined ||
-      name === undefined
-    )
-      return;
-    setLoading(true);
-    const result = await rateName(group.group_id, name.name_id, rating, user);
-
-    console.log(result);
-    if (result.success) {
-      next();
-    } else {
-      console.error(result.message);
+      const data = (response.data as NameType) || undefined;
+      //console.log(data);
+      setName(data); // Set the fetched data in the state
+    } catch (error: unknown) {
+      console.error(error);
+      //setError({ message: tError.message, name: tError.name }); // Set error state if something goes wrong
+    } finally {
+      setLoading(false); // Set loading state to false once the fetch is done
     }
-    setLoading(false); // Set loading state to false once the rating is done
   };
 
   useEffect(() => {
     // Function to fetch data from the API
-    next(); // Call the fetch function when the component mounts
+    fetchName(); // Call the fetch function when the component mounts
   }, []);
 
   if (!user) {
@@ -64,7 +50,7 @@ function RateName({
     genderText: "",
   };
   if (loading) {
-    return <div className="loading">Grabbing another name...</div>;
+    return <div className={displaySettings.class}>Loading...</div>;
   }
 
   if (!name) {
@@ -97,17 +83,17 @@ function RateName({
         </div>
       </div>
       <div className="name-controls">
-        <button onClick={() => rate(NameRating.No)}>No</button>
-        <button onClick={() => rate(NameRating.Ugh)}>Ugh</button>
+        <button>No</button>
+        <button>Ugh</button>
         <button
           onClick={() => {
-            next();
+            fetchName();
           }}
         >
           Skip
         </button>
-        <button onClick={() => rate(NameRating.Like)}>Like</button>
-        <button onClick={() => rate(NameRating.Love)}>Love</button>
+        <button>Like</button>
+        <button>Love</button>
       </div>
     </div>
   );

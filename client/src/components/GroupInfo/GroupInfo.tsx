@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
 import localFetch from "../../utility/LocalFetch";
 import { User } from "../../types/User";
-import { GroupMembershipType } from "../../types/Group";
+
+export type GroupMembershipType = {
+  group_id: number;
+  role: string;
+  description: string;
+  name: string;
+};
 
 export default function GroupInfo({
   user,
   group,
   setGroup,
 }: {
-  user: User | undefined;
-  group: GroupMembershipType | undefined;
-  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType>>;
+  user: User | undefined | null;
+  group: GroupMembershipType | undefined | null;
+  setGroup: React.Dispatch<React.SetStateAction<GroupMembershipType | null>>;
 }) {
   const [groups, setGroups] = useState<GroupMembershipType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,6 +52,7 @@ export default function GroupInfo({
     };
 
     fetchData(); // Call the fetch function when the component mounts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   useEffect(() => {

@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 
-let parseSourceAndSex = (req: Request): NameParams => {
+let parseSourceandSex = (req: Request): NameParams => {
   const queryParams: NameParams = {};
 
   if (AuthUser) {
@@ -49,16 +49,15 @@ let parseSourceAndSex = (req: Request): NameParams => {
 /*gets a single unrated name for a user*/
 router.get("/unrated", async function (req: Request, res: Response) {
   if (!AuthUser || !AuthUser.user_id) { res.json({ message: "not logged in", success: false }); return; }
-  console.log("unrated name 1 ", AuthUser);
+
   if (!req.query.group_id) { res.json({ message: "no group_id specified", success: false }); return; }
   const group_id = parseInt(req.query.group_id?.toString());
-  console.log("unrated name 2 ", AuthUser);
+
   const { isMember } = await Group.isMember(group_id);
 
   if (!isMember) { res.json({ message: "not a member of this group", success: false }); return; }
-  console.log("unrated name 3 ", AuthUser);
-  const { sex, source_ids } = parseSourceAndSex(req);
-  console.log("unrated name 4 ", AuthUser);
+
+  const { sex, source_ids } = parseSourceandSex(req);
   const result = await Name.getRandomUnratedName(AuthUser.user_id, group_id, sex, source_ids);
   console.log("unrated name 5 ", AuthUser, result);
   res.json(result);
@@ -69,7 +68,7 @@ router.get("/unrated", async function (req: Request, res: Response) {
 /* gets a list of random names */
 router.get("/", async function (req: Request, res: Response) {
 
-  const queryParams = parseSourceAndSex(req);
+  const queryParams = parseSourceandSex(req);
 
   const result = await Name.getRandomNames(queryParams);
 

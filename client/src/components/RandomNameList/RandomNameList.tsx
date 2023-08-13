@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import localFetch from "../../../../utility/LocalFetch";
-import { User } from "../../../../types/User";
+import localFetch from "../../utility/LocalFetch";
+import { User } from "../../types/User";
 import "./RandomNameList.css";
 
 export type NameType = {

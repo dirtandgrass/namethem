@@ -1,11 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 import { AuthUser } from '../middleware/headerauth'
-import Group from './group';
-import { Sex } from './name';
 
 const prisma = new PrismaClient()
 
-export type ratingResult = { name_id: number, name: string, rating: number, male: boolean, female: boolean, avg_rating: number };
+
 
 export default class Rating {
   static async rateName(name_id: number, rating: number, group_id: number = 1): Promise<{ message: string, success: boolean }> {
@@ -46,37 +44,4 @@ export default class Rating {
     }
   }
 
-  static async getTopRatedNames(group_id: number = 1, count: number = 5, sex: Sex = Sex.all): Promise<{ message: string, success: boolean, data?: ratingResult[], sex?: Sex }> {
-    const user_id = AuthUser?.user_id || 0;
-
-    if (user_id === 0) return { "message": "not logged in", "success": false };
-
-    if (!Number.isInteger(group_id) || !Number.isInteger(count) || count < 1) {
-      return { "message": "invalid data", "success": false };
-    }
-
-    if (!(await Group.isMember(group_id)).isMember) return { "message": "not a member of this group", "success": false };
-
-    let sex_clause: string = "";
-    switch (sex) {
-      case (Sex.male): {
-        sex_clause = "and n.male = true ";
-        break;
-      }
-      case (Sex.female): {
-        sex_clause = "and n.female = true ";
-        break;
-      }
-      case (Sex.unisex): {
-        sex_clause = "and (n.male = true and n.female = true) "
-      }
-    }
-    const query = `select n."name",n.name_id,n.male,n.female,avg(rating) as avg_rating from rating r join "name" n on n.name_id = r.name_id  where group_id=${group_id} ${sex_clause}group by n.name_id order by avg_rating desc limit ${count}`;
-
-    const ratings: ratingResult[] = await prisma.$queryRawUnsafe(query);
-
-
-    return { "message": "success", "success": true, "data": ratings, sex };
-
-  }
 }

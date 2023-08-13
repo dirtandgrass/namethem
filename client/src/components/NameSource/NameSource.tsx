@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import { NameType } from "../RandomNameList/RandomNameList";
 
-import localFetch from "../../../../utility/LocalFetch";
-import { SourceList } from "../../../../types/Source";
+import localFetch from "../../utility/LocalFetch";
+import { SourceList } from "../../types/Source";
 // import "./NameSource.css";
 
 function NameSource({ name }: { name: NameType }) {
@@ -18,14 +18,14 @@ function NameSource({ name }: { name: NameType }) {
         path: `source/${name.name_id}`,
       });
       const data = (response as SourceList) || undefined;
-      // console.log("name source data", data);
+      console.log(data);
       if (data) setNameSources(data); // Set the fetched data in the state
       else {
         setNameSources({ count: 0, data: [] });
       }
     } catch (error: unknown) {
       console.error(error);
-      setNameSources({ count: 0, data: [] });
+      //setError({ message: tError.message, name: tError.name }); // Set error state if something goes wrong
     } finally {
       setLoading(false); // Set loading state to false once the fetch is done
     }
@@ -38,11 +38,11 @@ function NameSource({ name }: { name: NameType }) {
   }, []);
 
   if (loading) {
-    return <div className="name-source">Loading...</div>;
+    return <div>Loading...</div>;
   }
 
   if (!nameSources || nameSources.data.length === 0) {
-    return <div className="name-source">No sources</div>;
+    return <div>No sources</div>;
   }
 
   return (
